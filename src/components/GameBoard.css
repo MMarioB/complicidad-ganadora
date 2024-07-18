@@ -1,82 +1,98 @@
 .game-board {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  
-  h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-  }
-  
-  .score-board {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
-  .score-board p {
-    font-size: 18px;
-    font-weight: bold;
-    color: #3498db;
-  }
-  
-  .timer {
-    font-size: 24px;
-    color: #e74c3c;
-    margin-bottom: 20px;
-  }
-  
-  .team-view {
-    background-color: #ecf0f1;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-  
-  .team-view h3 {
-    color: #2980b9;
-  }
-  
-  .team-view p {
-    font-size: 20px;
-    font-weight: bold;
-    color: #27ae60;
-  }
-  
-  button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #2980b9;
-  }
-  
-  button:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-  }
-  
-  input[type="text"] {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #bdc3c7;
-    border-radius: 5px;
-    margin-right: 10px;
-  }
-  
-  .game-controls {
-    margin-top: 20px;
-  }
+  background-color: #FF1493;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  width: 400px;
+  margin: auto;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.team-name {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.score-display {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.wildcards {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.wildcard {
+  background-color: orange;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.wildcard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.main-display {
+  background-color: #FF69B4;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.timer, .current-score {
+  font-size: 24px;
+  font-weight: bold;
+  width: 60px;
+  text-align: center;
+}
+
+.word-to-guess {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.controls button, .controls input {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.controls input {
+  flex-grow: 1;
+}
+
+.controls button {
+  background-color: white;
+  color: #FF1493;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

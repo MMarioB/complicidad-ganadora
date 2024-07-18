@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import TeamView from './TeamView'
-import ScoreBoard from './ScoreBoard'
-import Timer from './Timer'
 import './GameBoard.css'
 
-function GameBoard({ teamAName, teamBName }) {
+function GameBoard({ teamAName, teamBName, onGameEnd }) {
   const [scoreA, setScoreA] = useState(0)
   const [scoreB, setScoreB] = useState(0)
   const [timeLeft, setTimeLeft] = useState(90)
@@ -18,81 +15,38 @@ function GameBoard({ teamAName, teamBName }) {
     'perro', 'gato', 'pajaro', 'pez', 'elefante', 'leon', 'tigre',
     'mono', 'jirafa', 'cebra', 'oso', 'lobo', 'zorro', 'conejo'
   ])
-  const [usedWords, setUsedWords] = useState([])
   const [isGameActive, setIsGameActive] = useState(false)
   const [isPaused, setIsPaused] = useState(true)
   const [currentTeam, setCurrentTeam] = useState('A')
   const [wildcardsLeft, setWildcardsLeft] = useState(3)
   const [guessInput, setGuessInput] = useState('')
   const [roundsPlayed, setRoundsPlayed] = useState(0)
-  const [showGameOverScreen, setShowGameOverScreen] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
 
   useEffect(() => {
     let timer
     if (isGameActive && !isPaused && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-    } else if (isGameActive && timeLeft === 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1)
+      }, 1000)
+    } else if (timeLeft === 0) {
       endTurn()
     }
-    return () => clearTimeout(timer)
-  }, [timeLeft, isGameActive, isPaused])
+    return () => clearInterval(timer)
+  }, [isGameActive, isPaused, timeLeft])
 
   const startGame = () => {
     setIsGameActive(true)
-    setRoundsPlayed(0)
-    setScoreA(0)
-    setScoreB(0)
-    startNewTurn('A')
-  }
-
-  const startNewTurn = (team) => {
-    setCurrentTeam(team)
+    setIsPaused(false)
     setTimeLeft(90)
-    setWildcardsLeft(3)
     selectRandomWord()
-    setIsPaused(true)
-  }
-
-  const endTurn = () => {
-    const currentScore = currentTeam === 'A' ? scoreA : scoreB
-    const currentTeamName = currentTeam === 'A' ? teamAName : teamBName
-    alert(`Turno terminado.\nPuntuación de ${currentTeamName}: ${currentScore}`)
-    
-    if (words.length === 0 && usedWords.length === 0) {
-      alert("¡Se han agotado todas las palabras! El juego ha terminado.")
-      setIsGameActive(false)
-      return
-    }
-    
-    if (currentTeam === 'A') {
-      startNewTurn('B')
-      setRoundsPlayed(roundsPlayed + 1)
-    } else {
-      if (roundsPlayed === 1) {
-        setShowGameOverScreen(true)
-        setIsGameActive(false)
-      } else {
-        startNewTurn('A')
-      }
-    }
   }
 
   const selectRandomWord = () => {
-    if (words.length === 0) {
-      const shuffled = usedWords.sort(() => 0.5 - Math.random())
-      setWords(shuffled)
-      setUsedWords([])
-    }
-    
-    const randomIndex = Math.floor(Math.random() * words.length)
-    const selectedWord = words[randomIndex]
-    
-    setCurrentWord(selectedWord)
-    setWords(words.filter((_, index) => index !== randomIndex))
-    setUsedWords([...usedWords, selectedWord])
-
-    if (words.length < 10) {
-      console.log("Pocas palabras restantes. Deberíamos cargar más.")
+    if (words.length > 0) {
+      const randomIndex = Math.floor(Math.random() * words.length)
+      setCurrentWord(words[randomIndex])
+      setWords(words.filter((_, index) => index !== randomIndex))
     }
   }
 
@@ -114,15 +68,27 @@ function GameBoard({ teamAName, teamBName }) {
     selectRandomWord()
   }
 
-  const togglePause = () => {
-    setIsPaused(!isPaused)
-  }
-
   const useWildcard = () => {
     if (wildcardsLeft > 0) {
       setWildcardsLeft(wildcardsLeft - 1)
       selectRandomWord()
     }
+  }
+
+  const endTurn = () => {
+    setIsPaused(true)
+    setTimeLeft(90)
+    setWildcardsLeft(3)
+    setRoundsPlayed(roundsPlayed + 1)
+    if (roundsPlayed === 1) {
+      setGameOver(true)
+    } else {
+      setCurrentTeam(currentTeam === 'A' ? 'B' : 'A')
+    }
+  }
+
+  const togglePause = () => {
+    setIsPaused(!isPaused)
   }
 
   const determineWinner = () => {
@@ -131,51 +97,59 @@ function GameBoard({ teamAName, teamBName }) {
     return "Empate"
   }
 
-  if (showGameOverScreen) {
+  if (gameOver) {
     return (
-      <div className="game-over-screen">
+      <div className="game-board">
         <h2>Fin del Juego</h2>
-        <ScoreBoard scoreA={scoreA} scoreB={scoreB} teamAName={teamAName} teamBName={teamBName} />
-        <p>Ganador: {determineWinner()}</p>
-        <button onClick={() => {
-          setShowGameOverScreen(false)
-          startGame()
-        }}>Jugar de Nuevo</button>
+        <div className="final-scores">
+          <p>{teamAName}: {scoreA}</p>
+          <p>{teamBName}: {scoreB}</p>
+        </div>
+        <p className="winner">Ganador: {determineWinner()}</p>
+        <button onClick={onGameEnd}>Volver a Selección de Equipos</button>
       </div>
     )
   }
 
   return (
     <div className="game-board">
-      <h2>Complicidad Ganadora</h2>
-      <ScoreBoard scoreA={scoreA} scoreB={scoreB} teamAName={teamAName} teamBName={teamBName} />
-      <Timer timeLeft={timeLeft} isPaused={isPaused} />
-      <TeamView 
-        team={currentTeam}
-        word={currentWord}
-        teamAName={teamAName}
-        teamBName={teamBName}
-      />
-      {!isGameActive && (
-        <button onClick={startGame}>Iniciar Juego</button>
-      )}
-      {isGameActive && (
-        <div className="game-controls">
-          <button onClick={togglePause}>{isPaused ? 'Iniciar' : 'Pausar'}</button>
-          <button onClick={useWildcard} disabled={wildcardsLeft === 0}>
-            Pasar Palabra ({wildcardsLeft} restantes)
+      <div className="team-name">{currentTeam === 'A' ? teamAName : teamBName}</div>
+      <div className="score-display">
+        <span>{teamAName}: {scoreA}</span>
+        <span>{teamBName}: {scoreB}</span>
+      </div>
+      <div className="wildcards">
+        {[...Array(3)].map((_, index) => (
+          <button
+            key={index}
+            className={`wildcard ${index < wildcardsLeft ? 'active' : ''}`}
+            onClick={useWildcard}
+            disabled={index >= wildcardsLeft || !isGameActive || isPaused}
+          >
+            P
           </button>
-          <div>
-            <input 
-              type="text" 
-              value={guessInput}
-              onChange={(e) => setGuessInput(e.target.value)}
-              placeholder="Adivina la palabra" 
-            />
-            <button onClick={handleGuess}>Enviar Respuesta</button>
-          </div>
+        ))}
+      </div>
+      <div className="main-display">
+        <div className="timer">{timeLeft}</div>
+        <div className="word-to-guess">
+          {isGameActive ? (isPaused ? currentWord : currentWord) : "Pulsa Iniciar"}
         </div>
-      )}
+        <div className="current-score">{currentTeam === 'A' ? scoreA : scoreB}</div>
+      </div>
+      <div className="controls">
+        <button onClick={isGameActive ? togglePause : startGame}>
+          {isGameActive ? (isPaused ? 'Reanudar' : 'Pausar') : 'Iniciar'}
+        </button>
+        <input
+          type="text"
+          value={guessInput}
+          onChange={(e) => setGuessInput(e.target.value)}
+          placeholder="Adivina la palabra"
+          disabled={!isGameActive || isPaused}
+        />
+        <button onClick={handleGuess} disabled={!isGameActive || isPaused}>Enviar</button>
+      </div>
     </div>
   )
 }

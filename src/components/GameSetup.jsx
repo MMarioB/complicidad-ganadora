@@ -10,12 +10,13 @@ function GameSetup({ onStartGame }) {
   };
 
   return (
-    <div className="game-setup">
-      <h2>Configuración del Juego</h2>
+    <div className="configuration-container">
+      <h2 className="title-configuration">Configuración del Juego</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="teamA">Nombre del Equipo A:</label>
+          <label htmlFor="teamA"></label>
           <input
+            className="input-a"
             type="text"
             id="teamA"
             value={teamAName}
@@ -23,9 +24,10 @@ function GameSetup({ onStartGame }) {
             required
           />
         </div>
-        <div>
-          <label htmlFor="teamB">Nombre del Equipo B:</label>
+        <div className="input-configuration">
+          <label htmlFor="teamB"></label>
           <input
+            className="input-b"
             type="text"
             id="teamB"
             value={teamBName}
@@ -33,7 +35,7 @@ function GameSetup({ onStartGame }) {
             required
           />
         </div>
-        <button type="submit">Iniciar Juego</button>
+        <button className="primary-button" type="submit">Iniciar Juego</button>
       </form>
     </div>
   );

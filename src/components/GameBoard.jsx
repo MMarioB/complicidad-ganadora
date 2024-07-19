@@ -99,16 +99,20 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
 
   if (gameOver) {
     return (
-      <div className="game-board">
-        <h2>Fin del Juego</h2>
-        <div className="final-scores">
-          <p>{teamAName}: {scoreA}</p>
-          <p>{teamBName}: {scoreB}</p>
+      <div className="game-over-container">
+        <div className="game-over-card">
+          <h2 className="game-over-title">Fin del Juego</h2>
+          <div className="final-scores">
+            <p>{teamAName}: {scoreA}</p>
+            <p>{teamBName}: {scoreB}</p>
+          </div>
+          <p className="winner">Ganador: {determineWinner()}</p>
+          <button className="return-button" onClick={onGameEnd}>
+            Volver a Selección de Equipos
+          </button>
         </div>
-        <p className="winner">Ganador: {determineWinner()}</p>
-        <button onClick={onGameEnd}>Volver a Selección de Equipos</button>
       </div>
-    )
+    );
   }
 
   return (

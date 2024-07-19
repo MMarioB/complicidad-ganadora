@@ -13,15 +13,23 @@ function App() {
     setGameStarted(true)
   }
 
+  const handleGameEnd = () => {
+    setGameStarted(false);
+  };
+
   return (
-    <div className="App">
+    <div className="app">
       {!gameStarted ? (
         <GameSetup onStartGame={handleStartGame} />
       ) : (
-        <GameBoard teamAName={teamAName} teamBName={teamBName} />
+        <GameBoard
+          teamAName={teamAName}
+          teamBName={teamBName}
+          onGameEnd={handleGameEnd}
+        />
       )}
     </div>
-  )
+  );
 }
 
 export default App

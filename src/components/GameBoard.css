@@ -54,19 +54,25 @@
   margin-bottom: 10px;
 }
 
-.timer, .current-score {
+.timer {
   font-size: 24px;
   font-weight: bold;
   width: 60px;
-  text-align: center;
+}
+
+.current-score {
+  padding-left: 40px;
+  font-size: 24px;
+  font-weight: bold;
+  width: 60px;
 }
 
 .word-to-guess {
+  margin-left: -250px;
   font-size: 28px;
   font-weight: bold;
   text-align: center;
   flex-grow: 1;
-  margin: 0 10px;
 }
 
 .controls {
@@ -95,4 +101,55 @@
 .controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.game-over-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1e293b;
+}
+
+.game-over-card {
+  background-color: #ec4899;
+  border-radius: 20px;
+  padding: 30px;
+  width: 320px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.game-over-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.final-scores {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.winner {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.return-button {
+  background-color: white;
+  color: #ec4899;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.return-button:hover {
+  background-color: #f8fafc;
+  color: #be185d;
 }

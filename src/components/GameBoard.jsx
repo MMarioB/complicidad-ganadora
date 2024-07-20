@@ -4,7 +4,7 @@ import './GameBoard.css'
 function GameBoard({ teamAName, teamBName, onGameEnd }) {
   const [scoreA, setScoreA] = useState(0)
   const [scoreB, setScoreB] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(90)
+  const [timeLeft, setTimeLeft] = useState(60)
   const [currentWord, setCurrentWord] = useState('')
   const [words, setWords] = useState([
     'coche', 'ordenador', 'television', 'telefono', 'libro', 'pelota', 'guitarra',
@@ -38,7 +38,7 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
   const startGame = () => {
     setIsGameActive(true)
     setIsPaused(false)
-    setTimeLeft(90)
+    setTimeLeft(60)
     selectRandomWord()
   }
 
@@ -77,7 +77,7 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
 
   const endTurn = () => {
     setIsPaused(true)
-    setTimeLeft(90)
+    setTimeLeft(60)
     setWildcardsLeft(3)
     setRoundsPlayed(roundsPlayed + 1)
     if (roundsPlayed === 1) {

@@ -150,9 +150,9 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
           value={guessInput}
           onChange={(e) => setGuessInput(e.target.value)}
           placeholder="Adivina la palabra"
-          disabled={!isGameActive || isPaused}
+          disabled={!isGameActive}
         />
-        <button onClick={handleGuess} disabled={!isGameActive || isPaused}>Enviar</button>
+        <button onClick={handleGuess} disabled={!isGameActive}>Enviar</button>
       </div>
     </div>
   )

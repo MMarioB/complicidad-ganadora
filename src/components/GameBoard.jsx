@@ -6,15 +6,7 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
   const [scoreB, setScoreB] = useState(0)
   const [timeLeft, setTimeLeft] = useState(60)
   const [currentWord, setCurrentWord] = useState('')
-  const [words, setWords] = useState([
-    'coche', 'ordenador', 'television', 'telefono', 'libro', 'pelota', 'guitarra',
-    'mesa', 'silla', 'lampara', 'ventana', 'puerta', 'teclado', 'raton',
-    'pantalla', 'cafe', 'agua', 'reloj', 'calendario', 'lapiz', 'papel',
-    'mochila', 'zapatos', 'camisa', 'pantalon', 'gorra', 'sol', 'luna',
-    'estrella', 'nube', 'lluvia', 'nieve', 'viento', 'arbol', 'flor',
-    'perro', 'gato', 'pajaro', 'pez', 'elefante', 'leon', 'tigre',
-    'mono', 'jirafa', 'cebra', 'oso', 'lobo', 'zorro', 'conejo'
-  ])
+  const [words, setWords] = useState([])
   const [isGameActive, setIsGameActive] = useState(false)
   const [isPaused, setIsPaused] = useState(true)
   const [currentTeam, setCurrentTeam] = useState('A')
@@ -22,6 +14,10 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
   const [guessInput, setGuessInput] = useState('')
   const [roundsPlayed, setRoundsPlayed] = useState(0)
   const [gameOver, setGameOver] = useState(false)
+
+  useEffect(() => {
+    fetchWords()
+  }, [])
 
   useEffect(() => {
     let timer
@@ -35,6 +31,21 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
     return () => clearInterval(timer)
   }, [isGameActive, isPaused, timeLeft])
 
+  const fetchWords = async () => {
+    try {
+      const response = await fetch('https://api-palabras.onrender.com/palabras', {
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = await response.json()
+      setWords(data.map(word => word.palabra))
+    } catch (error) {
+      console.error('Error fetching words:', error)
+    }
+  }
+
   const startGame = () => {
     setIsGameActive(true)
     setIsPaused(false)
@@ -42,11 +53,24 @@ function GameBoard({ teamAName, teamBName, onGameEnd }) {
     selectRandomWord()
   }
 
-  const selectRandomWord = () => {
-    if (words.length > 0) {
-      const randomIndex = Math.floor(Math.random() * words.length)
-      setCurrentWord(words[randomIndex])
-      setWords(words.filter((_, index) => index !== randomIndex))
+  const selectRandomWord = async () => {
+    try {
+      const response = await fetch('https://api-palabras.onrender.com/palabra/aleatoria', {
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = await response.json()
+      setCurrentWord(data.palabra)
+    } catch (error) {
+      console.error('Error fetching random word:', error)
+      // Fallback to local word selection if API fails
+      if (words.length > 0) {
+        const randomIndex = Math.floor(Math.random() * words.length)
+        setCurrentWord(words[randomIndex])
+        setWords(words.filter((_, index) => index !== randomIndex))
+      }
     }
   }
 
